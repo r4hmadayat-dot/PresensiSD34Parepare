@@ -1,4 +1,4 @@
-const CACHE_NAME = 'presensi-guru-sdn34-v7';
+const CACHE_NAME = 'presensi-guru-sdn34-v6-camera';
 const ASSETS = [
   './',
   './index.html',
