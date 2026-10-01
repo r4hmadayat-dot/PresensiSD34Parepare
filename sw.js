@@ -1,39 +1,78 @@
-const CACHE_NAME = 'kehadiran-guru-shell-v3';
-const ASSETS = [
-  './', './index.html', './config.js', './manifest.webmanifest',
-  './icons/icon-192.png', './icons/icon-512.png'
+// =============================================================
+// SERVICE WORKER - PWA PRESENSI GURU
+// =============================================================
+// v5: refresh shell/config lebih andal agar perubahan GitHub tidak
+// tertahan cache versi lama.
+
+const CACHE_NAME = 'presensi-guru-pwa-v5';
+
+const STATIC_ASSETS = [
+  './',
+  './index.html',
+  './config.js',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
 ];
+
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(STATIC_ASSETS))
+      .catch(() => undefined)
+      .finally(() => self.skipWaiting())
+  );
 });
+
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))));
-  self.clients.claim();
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
 });
+
 self.addEventListener('fetch', event => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
-  const url = new URL(req.url);
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  const isConfig = url.pathname.endsWith('/config.js');
   const isHtml = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+  const isConfig = url.pathname.endsWith('/config.js');
+  const isManifest = url.pathname.endsWith('/manifest.webmanifest');
 
-  if (isConfig || isHtml) {
+  // HTML/config/manifest selalu mencoba mengambil versi terbaru dulu.
+  if (isHtml || isConfig || isManifest) {
     event.respondWith(
-      fetch(req, { cache: 'no-store' })
+      fetch(request, { cache: 'no-store' })
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
           }
           return response;
         })
-        .catch(() => caches.match(req))
+        .catch(() => caches.match(request))
     );
     return;
   }
 
-  event.respondWith(caches.match(req).then(cached => cached || fetch(req)));
+  // Asset statis: cache-first.
+  event.respondWith(
+    caches.match(request).then(cached => {
+      return cached || fetch(request).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
+        return response;
+      });
+    })
+  );
 });

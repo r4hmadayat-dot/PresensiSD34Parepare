@@ -2,96 +2,319 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#1677e8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0B78D0">
+  <meta name="description" content="Presensi Guru - UPTD SDN 34 PAREPARE">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icons/icon-192.png">
-  <title>Kehadiran Guru</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>Presensi Guru</title>
   <style>
-    :root{--primary:#1677e8;--bg:#f3f7fc;--text:#17304f;--muted:#6d7e91;--line:#dfe7f0}
-    *{box-sizing:border-box}
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}
-    .app{position:relative;width:100%;height:100dvh;min-height:100vh;background:var(--bg)}
-    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;display:none}
-    .loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:linear-gradient(180deg,#f8fbff,#eef3f9);padding:24px;text-align:center}
-    .logo{width:84px;height:84px;border-radius:24px;object-fit:contain;background:#fff;box-shadow:0 10px 25px rgba(22,119,232,.15)}
-    .loader strong{font-size:20px}.loader span{font-size:13px;color:var(--muted);max-width:440px;line-height:1.5}
-    .loader .error{display:none;margin-top:4px;padding:14px 16px;border:1px solid #f1caca;background:#fff6f6;border-radius:14px;color:#9f2d2d;max-width:520px;font-size:13px;line-height:1.5}
-    .install{position:fixed;right:14px;bottom:18px;z-index:20;display:none;border:0;border-radius:14px;padding:12px 16px;background:var(--primary);color:#fff;font-weight:800;box-shadow:0 8px 25px rgba(18,74,135,.25)}
-    .notice{position:fixed;left:14px;right:14px;bottom:18px;z-index:19;display:none;background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px 14px;box-shadow:0 10px 28px rgba(31,55,85,.12);font-size:12px;line-height:1.4}
-    .notice b{display:block;font-size:13px;margin-bottom:3px}.notice .close{float:right;border:0;background:transparent;font-size:18px;color:var(--muted)}
-    .retry{display:none;margin-top:8px;border:0;border-radius:12px;padding:11px 16px;background:#eaf3ff;color:#0b57b0;font-weight:800}
+    :root{
+      --primary:#0B78D0;
+      --primary-dark:#075FA7;
+      --bg:#F4F8FD;
+      --text:#132238;
+      --muted:#6E7E90;
+      --card:#FFFFFF;
+      --line:#DFE7F0;
+      --danger:#C62B35;
+      --shadow:0 14px 36px rgba(17,50,83,.12);
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden}
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    button{font:inherit}
+
+    .app{
+      position:relative;
+      width:100%;
+      height:100dvh;
+      min-height:100vh;
+      overflow:hidden;
+      background:var(--bg);
+    }
+
+    .splash{
+      position:absolute;
+      inset:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(11,120,208,.12), transparent 34%),
+        linear-gradient(180deg,#F9FCFF 0%,#EEF5FB 100%);
+      transition:opacity .35s ease,visibility .35s ease;
+    }
+
+    .splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+
+    .splash-card{
+      width:min(420px,100%);
+      padding:32px 24px 28px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.8);
+      border-radius:30px;
+      background:rgba(255,255,255,.95);
+      box-shadow:var(--shadow);
+    }
+
+    .school-logo{
+      width:108px;
+      height:108px;
+      object-fit:contain;
+      display:block;
+      margin:0 auto 20px;
+      padding:8px;
+      border-radius:28px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:0 12px 30px rgba(11,120,208,.13);
+    }
+
+    .app-name{
+      margin:0;
+      font-size:27px;
+      line-height:1.2;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .school-name{
+      margin:10px 0 4px;
+      font-size:16px;
+      font-weight:800;
+      line-height:1.4;
+    }
+
+    .school-address{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .loader-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-top:22px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .spinner{
+      width:18px;height:18px;border-radius:50%;
+      border:2px solid #D9E7F5;
+      border-top-color:var(--primary);
+      animation:spin .8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .message{
+      margin-top:18px;
+      padding:15px 16px;
+      border-radius:16px;
+      text-align:left;
+      background:#FFF5F5;
+      border:1px solid #F0CCCC;
+      color:#9E2B32;
+      font-size:13px;
+      line-height:1.55;
+      display:none;
+    }
+
+    .actions{display:flex;gap:10px;justify-content:center;margin-top:16px}
+    .btn{
+      border:0;
+      border-radius:14px;
+      min-height:46px;
+      padding:0 18px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-secondary{background:#EAF3FB;color:#075FA7}
+    .btn-block{width:100%}
+
+    iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+
+    .corner-install{
+      position:fixed;
+      right:16px;
+      bottom:18px;
+      z-index:30;
+      display:none;
+      border:0;
+      border-radius:16px;
+      min-height:48px;
+      padding:0 17px;
+      background:var(--primary);
+      color:#fff;
+      font-weight:800;
+      box-shadow:0 12px 30px rgba(11,120,208,.28);
+    }
+
+    @media (max-width:600px){
+      .splash{padding:18px}
+      .splash-card{padding:28px 18px 24px;border-radius:26px}
+      .school-logo{width:96px;height:96px;border-radius:24px}
+      .app-name{font-size:24px}
+      .school-name{font-size:15px}
+      .school-address{font-size:13px}
+    }
   </style>
 </head>
 <body>
   <main class="app">
-    <section class="loader" id="loader" aria-live="polite">
-      <img class="logo" src="./icons/icon-192.png" alt="Kehadiran Guru">
-      <strong id="loaderTitle">Kehadiran Guru</strong>
-      <span id="loaderText">Memuat aplikasi…</span>
-      <div id="loaderError" class="error"></div>
-      <button id="retryBtn" class="retry" type="button">Coba Lagi</button>
+    <section class="splash" id="splash" aria-live="polite">
+      <div class="splash-card">
+        <img id="schoolLogo" class="school-logo" src="./icon-512.png" alt="Logo sekolah">
+        <h1 id="appName" class="app-name">Presensi Guru</h1>
+        <p id="schoolName" class="school-name">UPTD SDN 34 PAREPARE</p>
+        <p id="schoolAddress" class="school-address">Jl. H. A. Muh. Asrayd No.3</p>
+
+        <div class="loader-row" id="loaderRow">
+          <span class="spinner" aria-hidden="true"></span>
+          <span id="loaderText">Memuat aplikasi…</span>
+        </div>
+
+        <div class="message" id="errorBox"></div>
+
+        <div class="actions" id="actionBox" style="display:none">
+          <button class="btn btn-primary" id="retryBtn" type="button">Coba Lagi</button>
+        </div>
+      </div>
     </section>
-    <iframe id="appFrame" title="Kehadiran Guru" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    <button id="installBtn" class="install" type="button">📲 Pasang Aplikasi</button>
-    <div id="notice" class="notice">
-      <button class="close" type="button" onclick="hideNotice()">×</button>
-      <b>Instalasi PWA</b>
-      Gunakan menu browser untuk <b>Tambahkan ke layar utama</b> atau tombol pasang yang tersedia.
-    </div>
+
+    <iframe
+      id="appFrame"
+      title="Presensi Guru"
+      allow="geolocation *; fullscreen"
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+
+    <button class="corner-install" id="installBtn" type="button">📲 Pasang Aplikasi</button>
   </main>
-  <script src="./config.js?v=3"></script>
+
+  <script src="./config.js?v=5"></script>
   <script>
-    const frame=document.getElementById('appFrame');
-    const loader=document.getElementById('loader');
-    const loaderTitle=document.getElementById('loaderTitle');
-    const loaderText=document.getElementById('loaderText');
-    const loaderError=document.getElementById('loaderError');
-    const retryBtn=document.getElementById('retryBtn');
-    const installBtn=document.getElementById('installBtn');
-    const notice=document.getElementById('notice');
-    let deferredPrompt=null;
-    function showError(title,msg){
-      loaderTitle.textContent=title;
-      loaderText.textContent='';
-      loaderError.textContent=msg;
-      loaderError.style.display='block';
-      retryBtn.style.display='inline-block';
-    }
-    function loadApp(){
-      loaderError.style.display='none'; retryBtn.style.display='none';
-      loaderTitle.textContent='Kehadiran Guru'; loaderText.textContent='Memuat aplikasi…'; loader.style.display='flex'; frame.style.display='none';
-      if(location.hostname.includes('script.google.com')){
-        showError('PWA belum ditempatkan dengan benar','Jangan memasukkan index.html PWA ini ke project Google Apps Script. Host folder PWA melalui HTTPS, misalnya GitHub Pages, lalu isi config.js dengan URL Web App /exec.');
-        return;
+    (function(){
+      'use strict';
+
+      const splash = document.getElementById('splash');
+      const frame = document.getElementById('appFrame');
+      const appNameEl = document.getElementById('appName');
+      const schoolNameEl = document.getElementById('schoolName');
+      const schoolAddressEl = document.getElementById('schoolAddress');
+      const loaderRow = document.getElementById('loaderRow');
+      const loaderText = document.getElementById('loaderText');
+      const errorBox = document.getElementById('errorBox');
+      const actionBox = document.getElementById('actionBox');
+      const retryBtn = document.getElementById('retryBtn');
+      const installBtn = document.getElementById('installBtn');
+
+      let loadTimer = null;
+      let deferredPrompt = null;
+
+      const config = (window.APP_CONFIG && typeof window.APP_CONFIG === 'object')
+        ? window.APP_CONFIG
+        : {};
+
+      function applyBranding(){
+        appNameEl.textContent = config.appName || 'Presensi Guru';
+        schoolNameEl.textContent = config.schoolName || 'UPTD SDN 34 PAREPARE';
+        schoolAddressEl.textContent = config.schoolAddress || 'Jl. H. A. Muh. Asrayd No.3';
+        frame.title = config.appName || 'Presensi Guru';
+        document.title = config.appName || 'Presensi Guru';
       }
-      const url = String((typeof APP_CONFIG !== 'undefined' && APP_CONFIG && APP_CONFIG.appUrl) ? APP_CONFIG.appUrl : '').trim();
-      if(!/^https:\/\//i.test(url) || !/\/exec(?:[?#].*)?$/i.test(url)){
-        showError('URL Web App belum diatur','Buka config.js dan isi appUrl dengan URL Google Apps Script yang berakhiran /exec.');
-        return;
+
+      function showError(title, detail){
+        loaderRow.style.display = 'none';
+        errorBox.style.display = 'block';
+        errorBox.innerHTML = '<strong>' + title + '</strong><br>' + detail;
+        actionBox.style.display = 'flex';
       }
-      frame.src=url;
-      frame.style.display='block';
-      window.clearTimeout(window._loadTimer);
-      window._loadTimer=window.setTimeout(()=>{
-        if(loader.style.display!=='none') showError('Aplikasi belum merespons','Periksa URL /exec, koneksi internet, dan pengaturan akses Web App.');
-      },15000);
-    }
-    frame.addEventListener('load',()=>{window.clearTimeout(window._loadTimer);loader.style.display='none';});
-    retryBtn.addEventListener('click',loadApp);
-    window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.style.display='block';});
-    installBtn.addEventListener('click',async()=>{
-      if(!deferredPrompt){notice.style.display='block';return;}
-      deferredPrompt.prompt();
-      try{await deferredPrompt.userChoice}catch(e){}
-      deferredPrompt=null;installBtn.style.display='none';
-    });
-    window.addEventListener('appinstalled',()=>{installBtn.style.display='none';});
-    function hideNotice(){notice.style.display='none'}
-    if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-    loadApp();
+
+      function startLoad(){
+        clearTimeout(loadTimer);
+        errorBox.style.display = 'none';
+        actionBox.style.display = 'none';
+        loaderRow.style.display = 'flex';
+        loaderText.textContent = 'Memuat aplikasi…';
+        splash.classList.remove('hide');
+
+        const appUrl = String(config.appUrl || '').trim();
+
+        if (!/^https:\/\//i.test(appUrl) || !/\/exec(?:[?#].*)?$/i.test(appUrl)) {
+          showError(
+            'URL Web App belum diatur',
+            'Pastikan file config.js berisi URL Google Apps Script yang berakhiran /exec.'
+          );
+          return;
+        }
+
+        frame.src = appUrl;
+
+        loadTimer = setTimeout(function(){
+          if (!splash.classList.contains('hide')) {
+            showError(
+              'Aplikasi belum merespons',
+              'Periksa URL /exec, koneksi internet, dan pengaturan akses Web App Apps Script.'
+            );
+          }
+        }, 20000);
+      }
+
+      frame.addEventListener('load', function(){
+        clearTimeout(loadTimer);
+        setTimeout(function(){ splash.classList.add('hide'); }, 120);
+      });
+
+      retryBtn.addEventListener('click', startLoad);
+
+      window.addEventListener('beforeinstallprompt', function(event){
+        event.preventDefault();
+        deferredPrompt = event;
+        installBtn.style.display = 'block';
+      });
+
+      installBtn.addEventListener('click', async function(){
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        try { await deferredPrompt.userChoice; } catch (_) {}
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      });
+
+      window.addEventListener('appinstalled', function(){
+        installBtn.style.display = 'none';
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function(){
+          navigator.serviceWorker.register('./sw.js?v=5').catch(function(){ /* non-fatal */ });
+        });
+      }
+
+      applyBranding();
+      startLoad();
+    })();
   </script>
 </body>
 </html>
