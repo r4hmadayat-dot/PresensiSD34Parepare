@@ -1,29 +1,16 @@
 {
-  "id": "./",
-  "name": "Presensi Guru",
+  "name": "Presensi Guru - UPTD SDN 34 Parepare",
   "short_name": "Presensi Guru",
-  "description": "Sistem presensi guru UPTD SDN 34 PAREPARE berbasis lokasi dan akun.",
-  "lang": "id-ID",
+  "description": "Aplikasi presensi guru UPTD SDN 34 Parepare berbasis lokasi.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
-  "background_color": "#F4F8FD",
-  "theme_color": "#0B78D0",
-  "prefer_related_applications": false,
+  "background_color": "#eef4fb",
+  "theme_color": "#0b72d8",
+  "lang": "id-ID",
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
