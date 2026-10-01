@@ -1,11 +1,11 @@
-const CACHE_NAME = 'presensi-guru-sdn34-v6';
+const CACHE_NAME = 'presensi-guru-sdn34-v7';
 const ASSETS = [
   './',
   './index.html',
   './config.js',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
