@@ -1,5 +1,4 @@
-// Konfigurasi PWA.
-// URL Web App Apps Script deployment /exec.
+// URL Web App Google Apps Script deployment /exec.
 window.APP_CONFIG = {
-  appUrl: 'https://script.google.com/macros/s/AKfycbwrgQBoJ_nxiOMt996nlRWrR-IoWqPOnkTj_aMTRgxozAZcMSGGXpbS3jGM5sobp7uynw/exec'
+  appUrl: 'https://script.google.com/macros/s/AKfycbyHxgcRlO8L-bHIpvBG6uvihhikvHlFIvjFg_pJmEyOhGkEJQAn3k3CdKz7thajCMANoA/exec'
 };
