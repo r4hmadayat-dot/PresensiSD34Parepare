@@ -1,24 +1,15 @@
-PAKET PWA SIAP UPLOAD GITHUB PAGES
+PAKET PWA SIAP UPLOAD KE GITHUB
 
-Upload FILE DI DALAM folder ini langsung ke root repository GitHub.
-
-File:
+Upload isi folder ini ke ROOT repository GitHub Pages Anda:
 - index.html
 - config.js
 - manifest.webmanifest
 - sw.js
-- icon-192.png
-- icon-512.png
+- icons/icon-192.png
+- icons/icon-512.png
 
-URL Web App Apps Script sudah ditanam pada config.js.
+URL Apps Script /exec yang sudah ditanam pada config.js:
+https://script.google.com/macros/s/AKfycbzv8mnscfmpAyyrqsuOrVGYS6hNZQ7UyYVDAIlIzfq1ISlKfmfUN-qgSefSkNkYidb6Tg/exec
 
-URL PWA:
-https://r4hmadayat-dot.github.io/PresensiSD34Parepare/
-
-JANGAN mengupload file ZIP ini ke repository.
-JANGAN menaruh file di dalam subfolder.
-
-Setelah upload:
-Settings -> Pages -> Deploy from a branch -> main -> /(root)
-
-Jika sebelumnya ada PWA lama, hapus cache/service worker atau hapus PWA lama lalu buka ulang URL untuk pengujian.
+Jangan upload file README jika ingin repository tetap bersih. README hanya petunjuk.
+Pastikan GitHub Pages menggunakan branch main dan folder / (root).
