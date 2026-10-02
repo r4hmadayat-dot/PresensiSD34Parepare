@@ -1,4 +1,2 @@
-// URL Web App Google Apps Script deployment /exec terbaru.
-window.APP_CONFIG = {
-  appUrl: 'https://script.google.com/macros/s/AKfycbwmnywekIqLUsShinguPEfSOULcPhcJeq8jJvLSRQErCWi8SjWRMni3OauPoFo8P1RxDg/exec'
-};
+// URL deployment Apps Script terbaru
+window.APP_CONFIG = {appUrl: 'https://script.google.com/macros/s/AKfycbxBpPNMt1LhBZa6hARMSseRJq5Dl30bn9n3tBLsbOI0dSP8goDZJat6zDdN8OrA7Bo0Ug/exec'};
